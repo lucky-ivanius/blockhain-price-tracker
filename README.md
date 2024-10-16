@@ -30,3 +30,7 @@ $ pnpm run start:prod
 ```bash
 $ docker-compose up -d
 ```
+
+## API Docs
+
+Swagger Docs is served on `/docs`
