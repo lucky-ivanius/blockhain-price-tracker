@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  nestjs-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      - MORALIS_API_KEY=${MORALIS_API_KEY}
+      - PRICE_MOVEMENT_EMAIL_RECIPIENT=${PRICE_MOVEMENT_EMAIL_RECIPIENT}
+      - PRICE_MOVEMENT_PERCENTAGE_THRESHOLD=${PRICE_MOVEMENT_PERCENTAGE_THRESHOLD}
+      - PRICE_MOVEMENT_ALERT_COOLDOWN_PERIOD_MINUTE=${PRICE_MOVEMENT_ALERT_COOLDOWN_PERIOD_MINUTE}
+      - EMAIL_HOST=${EMAIL_HOST}
+      - EMAIL_PORT=${EMAIL_PORT}
+      - EMAIL_USER=${EMAIL_USER}
+      - EMAIL_PASS=${EMAIL_PASS}
+    depends_on:
+      - db
+    env_file:
+      - .env
+
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - .env
+
+volumes:
+  postgres_data:
